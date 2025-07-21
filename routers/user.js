@@ -4,30 +4,35 @@ import CheckPassword from "../services/checkpassword.js";
 import { requireAuth } from "../middleware/auth.js";
 import dotenv from "dotenv";
 dotenv.config();
-const BASE_URL = `http://localhost:${process.env.PORT}`
+const BASE_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT}`;
 
 const router = Router();
 
 router.get("/me", requireAuth, async (req, res) => {
-        // try {
-                const userId = req.user._id;
-        //         const user = await User.findById(userId).select("-password"); // exclude password
-        //         res.json({ user });
-        // } catch (err) {
-        //         res.status(500).json({ error: "Server error" });
-        // }
+       try {
+        console.log("req.user:", req.user); // debug
+
+        const userId = req.user._id;
         const user = await User.findById(userId).select("-password");
 
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
         const profileImageURL = user.profileImageURL?.startsWith("http")
-                ? user.profileImageURL
-                : `${BASE_URL}${user.profileImageURL}`;
+            ? user.profileImageURL
+            : `${process.env.BACKEND_URL || `https://pingme-backend-z5de.onrender.com`}${user.profileImageURL}`;
 
         res.json({
-                user: {
-                        ...user.toObject(),
-                        profileImageURL,
-                },
+            user: {
+                ...user.toObject(),
+                profileImageURL,
+            },
         });
+    } catch (err) {
+        console.error("Error in /me:", err.message);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
 router.post("/signup", async (req, res) => {
@@ -55,8 +60,12 @@ router.post("/signin", async (req, res) => {
         }
 });
 router.get("/logout", (req, res) => {
-        res.clearCookie("token");
-        res.json({success:true,message: "you have been logged out"});
+        res.clearCookie("token", {
+                httpOnly: true,
+                sameSite: "none",
+                secure: true
+        });
+        res.json({ success: true, message: "You have been logged out" });
 });
 
 export default router;
