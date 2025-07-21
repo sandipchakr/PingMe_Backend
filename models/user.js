@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-const BASE_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT}`;
 
 const userSchema = new mongoose.Schema({
     fullname:{
@@ -19,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
        profileImageURL:{
         type:String,
-        default:`${BASE_URL}/images/default.png`,
+        default:`/images/default.png`,
     },
 },
 {timestamps:true}
