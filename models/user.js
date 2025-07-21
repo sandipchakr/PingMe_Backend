@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-const BASE_URL = `http://localhost:${process.env.PORT}`
+const BASE_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT}`;
 
 const userSchema = new mongoose.Schema({
     fullname:{
