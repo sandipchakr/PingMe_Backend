@@ -18,7 +18,7 @@ import checkForAuthenticationCookie from "./middleware/auth.js";
 
 //middleware:-
 app.use(cors({
-  origin: "http://localhost:5173",     // ✅ your frontend URL
+  origin: "https://ping-me-frontend-sooty.vercel.app",     // ✅ your frontend URL
   credentials: true                    // ✅ allow cookies
 }));
 app.use(express.static(path.resolve("./public")));
