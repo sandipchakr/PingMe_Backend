@@ -33,7 +33,7 @@ app.get("/api/health",(req,res)=>{
   res.send("Backend is running...");
 })
 app.get("/", async(req,res)=>{
-    if(!req.user) res.send("you need to signin...");
+    if(!req.user) return res.send("you need to signin...");
     res.send(`JAI JAGANNATH \n You are walcome ${req.user.fullname}`);
 });
 
